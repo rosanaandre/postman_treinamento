@@ -1,0 +1,135 @@
+{
+	"id": "9c3e4e74-5f97-42c5-a223-c2ddbe1cf241",
+	"name": "postman",
+	"values": [
+		{
+			"key": "Token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "URL",
+			"value": "https://api-automacao.qacoders.dev.br/api",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "UserName",
+			"value": "Steven Mitchell",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "ProviderMail",
+			"value": "@outlook.com",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Mail",
+			"value": "Mithras_94b1b90c-7c2b-423f-a3a0-7d2f410a8cd3@outlook.com",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "AccessProfile",
+			"value": "CONTROLADORIA",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "UserCPF",
+			"value": "04322700861",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "FirstName",
+			"value": "Mithras",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "LastName",
+			"value": "Alves de Souza",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "FullName",
+			"value": "Mithras Alves de Souza",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Count1",
+			"value": 7,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "UserId",
+			"value": "68c30f7cca2ba0877cf1f158",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "CPF",
+			"value": "30868020060",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Count2",
+			"value": 8,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "FirstNameUpdate",
+			"value": "Mithras",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "LastNameUpdate",
+			"value": "de Souza",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "FullNameUpdate",
+			"value": "Mithras de Souza",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "ProviderMailUpdate",
+			"value": "@outlook.com",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "MailUpdate",
+			"value": "Mithras_2c3a3a10-a655-47a4-b814-0b2444cd59d7@outlook.com",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "TokenUser",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGMzMGY3Y2NhMmJhMDg3N2NmMWYxNTgiLCJmdWxsTmFtZSI6Ik1pdGhyYXMgQWx2ZXMgZGUgU291emEiLCJtYWlsIjoiTWl0aHJhc185NGIxYjkwYy03YzJiLTQyM2YtYTNhMC03ZDJmNDEwYThjZDNAb3V0bG9vay5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRyMGZTLzFtaFJzc3kxMjI3OXRlWGN1cXVMTjFrTzEyQ1VEL29SRmc2UWcyY2FJZElqVGtzUyIsImFjY2Vzc1Byb2ZpbGUiOiJBRE1JTiIsImNwZiI6IjMwODY4MDIwMDYwIiwic3RhdHVzIjp0cnVlLCJhdWRpdCI6W3sicmVnaXN0ZXJlZEJ5Ijp7InVzZXJJZCI6IjY4YzJmNjExY2EyYmEwODc3Y2YxZWM4MiIsInVzZXJMb2dpbiI6InN5c2FkbWluQHFhY29kZXJzLmNvbSJ9LCJyZWdpc3RyYXRpb25EYXRlIjoicXVpbnRhLWZlaXJhLCAxMS8wOS8yMDI1LCAxNTowNTo0OCBCUlQiLCJyZWdpc3RyYXRpb25OdW1iZXIiOiJRYUNvZGVycy0yMCIsIl9pZCI6IjY4YzMwZjdjY2EyYmEwODc3Y2YxZjE1OSJ9XSwiX192IjowLCJpYXQiOjE3NTc2MTM5NTYsImV4cCI6MTc1NzcwMDM1Nn0.b5yaI8z2mgjOGbYln6Y0nF-nYx49Wrs-M0QbeYfQuXs",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "PasswordUpdate",
+			"value": "@V4ph@qJNihE",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-09-16T17:14:19.353Z",
+	"_postman_exported_using": "Postman/11.63.0"
+}

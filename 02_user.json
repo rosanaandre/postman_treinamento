@@ -1,0 +1,1268 @@
+{
+	"info": {
+		"_postman_id": "a7e75c78-7410-473a-9f4c-df228f71900b",
+		"name": "02_user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31291289"
+	},
+	"item": [
+		{
+			"name": "dependencies",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User ID is not empty\", function() {",
+									"    pm.expect(pm.response.json().user._id).to.not.be.empty;",
+									"})",
+									"",
+									"pm.test(\"Token is not empty\", function() {",
+									"    pm.expect(pm.response.json().token).to.not.be.empty;",
+									"})",
+									"",
+									"pm.environment.set(\"Token\", pm.response.json().token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mail\": \"{{MailAdmin}}\",\n  \"password\": \"{{Password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "happy_path",
+			"item": [
+				{
+					"name": "user_count1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check count is not null\", function() {",
+									"    pm.expect(pm.response.json().count).to.not.be.null;",
+									"});",
+									"",
+									"pm.environment.set(\"Count1\", pm.response.json().count);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/count",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function firstName() {",
+									"",
+									"    let firstName = [\"William\", \"Joao\", \"Maria\", \"Pablo\", \"Mithras\", \"Karla\", \"Yasmin\", \"Raissa\", \"Lisa\", \"Rodrigo\", \"Adriano\", \"Gledson\"];",
+									"",
+									"    let randomItem = firstName[Math.floor(Math.random() * firstName.length)];",
+									"",
+									"    return randomItem",
+									"}",
+									"pm.environment.set(\"FirstName\", firstName())",
+									"",
+									"function lastName() {",
+									"",
+									"    let lastName = [\"Alves de Souza\", \"Silva Snatos\", \"Alves da Silva\", \"de Souza\", \"Henrique de Lima\", \"Andre\", \"Joaquim de Carvalho\", \"Batista\", \"Lima\"];",
+									"",
+									"    let randomItem = lastName[Math.floor(Math.random() * lastName.length)];",
+									"",
+									"    return randomItem",
+									"}",
+									"",
+									"pm.environment.set(\"LastName\", lastName())",
+									"",
+									"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));",
+									"",
+									"function providerMail() {",
+									"",
+									"    let providerMail = [\"@yahoo.com.br\", \"@gmail.com\", \"@outlook.com\", \"@hotmail.com\", \"@uol.com.br\", \"@icloud.com\"];",
+									"",
+									"    let randomItem = providerMail[Math.floor(Math.random() * providerMail.length)];",
+									"",
+									"    return randomItem",
+									"}",
+									"pm.environment.set(\"ProviderMail\", providerMail())",
+									"",
+									"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\"))",
+									"",
+									"function gerarCPF() {",
+									"    function random(n) {",
+									"        return Math.floor(Math.random() * n);",
+									"    }",
+									"",
+									"    function mod(dividendo, divisor) {",
+									"        return Math.round(dividendo - Math.floor(dividendo / divisor) * divisor);",
+									"    }",
+									"",
+									"    let n = [];",
+									"    for (let i = 0; i < 9; i++) {",
+									"        n[i] = random(9);",
+									"    }",
+									"",
+									"    let d1 = 0;",
+									"    for (let i = 0; i < 9; i++) {",
+									"        d1 += n[i] * (10 - i);",
+									"    }",
+									"    d1 = 11 - mod(d1, 11);",
+									"    if (d1 >= 10) d1 = 0;",
+									"",
+									"    let d2 = 0;",
+									"    for (let i = 0; i < 9; i++) {",
+									"        d2 += n[i] * (11 - i);",
+									"    }",
+									"    d2 += d1 * 2;",
+									"    d2 = 11 - mod(d2, 11);",
+									"    if (d2 >= 10) d2 = 0;",
+									"",
+									"    return `${n[0]}${n[1]}${n[2]}${n[3]}${n[4]}${n[5]}${n[6]}${n[7]}${n[8]}${d1}${d2}`;",
+									"}",
+									"pm.environment.set(\"CPF\", gerarCPF());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function() {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Check if ID is not empty\", function() {",
+									"    pm.expect(pm.response.json().user._id).to.not.be.empty;",
+									"    pm.environment.set(\"UserId\", pm.response.json().user._id);",
+									"});",
+									"",
+									"pm.test(\"Check if FullName is true\", function() {",
+									"    pm.expect(pm.response.json().user.fullName).to.eql(pm.environment.get(\"FullName\"));",
+									"});",
+									"",
+									"pm.test(\"Check if Mail is true\", function() {",
+									"    pm.expect(pm.response.json().user.mail).to.eql(pm.environment.get(\"Mail\"));",
+									"});",
+									"",
+									"pm.test(\"Check if Access Profile is not empty\", function() {",
+									"    pm.expect(pm.response.json().user.accessProfile).to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Check if CPF is true\", function() {",
+									"    pm.expect(pm.response.json().user.cpf).to.eql(pm.environment.get(\"CPF\"));",
+									"});",
+									"",
+									"pm.test(\"Check if Status is true\", function() {",
+									"    pm.expect(pm.response.json().user.status).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"{{FullName}}\",\n    \"mail\": \"{{Mail}}\",\n    \"accessProfile\": \"ADMIN\",\n    \"cpf\": \"{{CPF}}\",\n    \"password\": \"{{Password}}\",\n    \"confirmPassword\": \"{{Password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_count2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check count is not null\", function() {",
+									"    pm.expect(pm.response.json().count).to.not.be.null;",
+									"});",
+									"",
+									"pm.environment.set(\"Count2\", pm.response.json().count);",
+									"",
+									"let count1 = Number(pm.environment.get(\"Count1\"));",
+									"let count2 = Number(pm.environment.get(\"Count2\"));",
+									"",
+									"pm.test(\"Validate Count2 is greater then Count1\", function() {",
+									"    pm.expect(count2).to.be.greaterThan(count1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/count",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains an array\", function () {",
+									"    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+									"    pm.expect(pm.response.json().length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Response has the _id parameter\", function () {",
+									"    pm.expect(pm.response.json()[0]).to.have.property('_id');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check if ID is not empty\", function() {",
+									"    pm.expect(pm.response.json()._id).to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Check if FullName is true\", function() {",
+									"    pm.expect(pm.response.json().fullName).to.eql(pm.environment.get(\"FullName\"));",
+									"});",
+									"",
+									"pm.test(\"Check if Mail is true\", function() {",
+									"    pm.expect(pm.response.json().mail).to.eql(pm.environment.get(\"Mail\"));",
+									"});",
+									"",
+									"pm.test(\"Check if Access Profile is not empty\", function() {",
+									"    pm.expect(pm.response.json().accessProfile).to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Check if CPF is true\", function() {",
+									"    pm.expect(pm.response.json().cpf).to.eql(pm.environment.get(\"CPF\"));",
+									"});",
+									"",
+									"pm.test(\"Check is Status is true\", function() {",
+									"    pm.expect(pm.response.json().status).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/{{UserId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"{{UserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate status updated msg\", function() {",
+									"    pm.expect(pm.response.json().msg).to.eql(pm.globals.get(\"MsgStatusUpdate\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/status/{{UserId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"status",
+								"{{UserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_create_login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User ID is not empty\", function() {",
+									"    pm.expect(pm.response.json().user._id).to.not.be.empty;",
+									"})",
+									"",
+									"pm.test(\"Token is not empty\", function() {",
+									"    pm.expect(pm.response.json().token).to.not.be.empty;",
+									"})",
+									"",
+									"pm.environment.set(\"TokenUser\", pm.response.json().token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mail\": \"{{Mail}}\",\n  \"password\": \"{{Password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/login/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function firstNameUpdate() {",
+									"",
+									"    let firstName = [\"William\", \"Joao\", \"Maria\", \"Pablo\", \"Mithras\", \"Karla\", \"Yasmin\", \"Raissa\", \"Lisa\", \"Rodrigo\", \"Adriano\", \"Gledson\"];",
+									"",
+									"    let randomItem = firstName[Math.floor(Math.random() * firstName.length)];",
+									"",
+									"    return randomItem",
+									"}",
+									"pm.environment.set(\"FirstNameUpdate\", firstNameUpdate())",
+									"",
+									"function lastNameUpdate() {",
+									"",
+									"    let lastName = [\"Alves de Souza\", \"Silva Snatos\", \"Alves da Silva\", \"de Souza\", \"Henrique de Lima\", \"Andre\", \"Joaquim de Carvalho\", \"Batista\", \"Lima\"];",
+									"",
+									"    let randomItem = lastName[Math.floor(Math.random() * lastName.length)];",
+									"",
+									"    return randomItem",
+									"}",
+									"",
+									"pm.environment.set(\"LastNameUpdate\", lastNameUpdate())",
+									"",
+									"pm.environment.set(\"FullNameUpdate\", pm.environment.get(\"FirstNameUpdate\") + \" \" + pm.environment.get(\"LastNameUpdate\"));",
+									"",
+									"function providerMailUpdate() {",
+									"",
+									"    let providerMail = [\"@yahoo.com.br\", \"@gmail.com\", \"@outlook.com\", \"@hotmail.com\", \"@uol.com.br\", \"@icloud.com\"];",
+									"",
+									"    let randomItem = providerMail[Math.floor(Math.random() * providerMail.length)];",
+									"",
+									"    return randomItem",
+									"}",
+									"pm.environment.set(\"ProviderMailUpdate\", providerMailUpdate())",
+									"",
+									"pm.environment.set(\"MailUpdate\", pm.environment.get(\"FirstNameUpdate\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMailUpdate\"))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate update msg\", function() {",
+									"    pm.expect(pm.response.json().msg).to.eql(pm.globals.get(\"MsgUpdate\"));",
+									"});",
+									"",
+									"pm.test(\"Check if fullName has been updated\", function() {",
+									"    pm.expect(pm.response.json().updatedUser.fullName).to.eql(pm.environment.get(\"FullNameUpdate\"));",
+									"});",
+									"",
+									"pm.test(\"Check if mail has been updated\", function() {",
+									"    pm.expect(pm.response.json().updatedUser.mail).to.eql(pm.environment.get(\"MailUpdate\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{TokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"{{FullNameUpdate}}\",\n    \"mail\": \"{{MailUpdate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/{{UserId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"{{UserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate password updated msg\", function() {",
+									"    pm.expect(pm.response.json().msg).to.eql(pm.globals.get(\"MsgPasswordUpdate\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function generatePasswordChange() {",
+									"    const chars = {",
+									"        lower: 'abcdefghijklmnopqrstuvwxyz',",
+									"        upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',",
+									"        num: '0123456789',",
+									"        special: '@#$%'",
+									"    };",
+									"",
+									"    const getRandomChar = str => str[Math.floor(Math.random() * str.length)];",
+									"",
+									"    let passwordChange = getRandomChar(chars.lower) +",
+									"                         getRandomChar(chars.upper) +",
+									"                         getRandomChar(chars.num) +",
+									"                         getRandomChar(chars.special);",
+									"    const allChars = chars.lower + chars.upper + chars.num + chars.special;",
+									"    const length = Math.floor(Math.random() * (12 - 8 + 1)) + 8;",
+									"    while (passwordChange.length < length) {",
+									"        passwordChange += getRandomChar(allChars);",
+									"    }",
+									"",
+									"    passwordChange = passwordChange.split('').sort(() => Math.random() - 0.5).join('');",
+									"",
+									"    pm.environment.set(\"PasswordUpdate\", passwordChange);",
+									"",
+									"    return passwordChange;",
+									"}",
+									"generatePasswordChange();"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{TokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"{{PasswordUpdate}}\",\n    \"confirmPassword\": \"{{PasswordUpdate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/password/{{UserId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"{{UserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate delete msg\", function() {",
+									"    pm.expect(pm.response.json().msg).to.eql(pm.globals.get(\"MsgUserDelete\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/{{UserId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"{{UserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 404\", function() {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Validate msg user not exist\", function() {",
+									"    pm.expect(pm.response.json().alert[0]).to.eql(pm.globals.get(\"MsgUserNotExist\"))",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/user/{{UserId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"{{UserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "exceptions",
+			"item": [
+				{
+					"name": "user_create_empty",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Contains error mgs\", function () {",
+									"    let expectedErrors = [",
+									"        \"O campo nome completo é obrigatório.\",",
+									"        \"O campo e-mail é obrigatório.\",",
+									"        \"O campo senha é obrigatório\",",
+									"        \"O campo CPF é obrigatório!\",",
+									"        \"O campo perfil de acesso é obrigatório.\",",
+									"        \"O campo de confirmação de senha é obrigatório.\"",
+									"    ];",
+									"    ",
+									"    expectedErrors.forEach(function (msg) {",
+									"        pm.expect(pm.response.json().error).to.include(msg);",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"\",\n    \"mail\": \"\",\n    \"accessProfile\": \"\",\n    \"cpf\": \"\",\n    \"password\": \"\",\n    \"confirmPassword\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_create_first_name_only",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Contains error mgs\", function () {",
+									"    let expectedErrors = [",
+									"        \"Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.\",",
+									"        \"O campo e-mail é obrigatório.\",",
+									"        \"O campo senha é obrigatório\",",
+									"        \"O campo CPF é obrigatório!\",",
+									"        \"O campo perfil de acesso é obrigatório.\",",
+									"        \"O campo de confirmação de senha é obrigatório.\"",
+									"    ];",
+									"    ",
+									"    expectedErrors.forEach(function (msg) {",
+									"        pm.expect(pm.response.json().error).to.include(msg);",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Luiz\",\n    \"mail\": \"\",\n    \"accessProfile\": \"\",\n    \"cpf\": \"\",\n    \"password\": \"\",\n    \"confirmPassword\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user_create_full_name_only",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function() {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Contains error mgs\", function () {",
+									"    let expectedErrors = [",
+									"        \"O campo e-mail é obrigatório.\",",
+									"        \"O campo senha é obrigatório\",",
+									"        \"O campo CPF é obrigatório!\",",
+									"        \"O campo perfil de acesso é obrigatório.\",",
+									"        \"O campo de confirmação de senha é obrigatório.\"",
+									"    ];",
+									"    ",
+									"    expectedErrors.forEach(function (msg) {",
+									"        pm.expect(pm.response.json().error).to.include(msg);",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Luiz Souza\",\n    \"mail\": \"\",\n    \"accessProfile\": \"\",\n    \"cpf\": \"\",\n    \"password\": \"\",\n    \"confirmPassword\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/user/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
