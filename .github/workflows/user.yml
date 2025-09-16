@@ -1,0 +1,37 @@
+name: user
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Step 1 Check version Newman and Node 
+        run: |
+          newman --version 
+          node --version
+
+      - name: Step 2 Install Newman-Reporter-Htmlextra
+        run: sudo npm install -g newman-reporter-htmlextra
+
+      - name: Step 3 Create result folder
+        run: mkdir -p result
+
+      - name: Step 4 Execute collection
+        run: newman run ./02_user.json -g ./globals.json -e ./postman.json --delay-request 1 --reporters cli,htmlextra --reporter-htmlextra-export ./result/Report.html
+
+      - name: Step 5 Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: report 
+          path: ./result/Report.html
+
+
